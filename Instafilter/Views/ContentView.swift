@@ -12,14 +12,23 @@ import SwiftUI
 struct ContentView: View {
     @State private var image: Image?
     @State private var filterIntensity: CGFloat = 0.5
-
+    
+    @State private var showingFilterSheet = false
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage?
     
-    @State private var currentFilter = CIFilter.sepiaTone()
+    @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
     let context = CIContext()
     
     var body: some View {
+        let intensity = Binding<Double> {
+            self.filterIntensity
+        } set: {
+            self.filterIntensity = $0
+            self.applyProcessing()
+        }
+        
+        
         NavigationView {
             VStack {
                 ZStack {
@@ -31,7 +40,6 @@ struct ContentView: View {
                         image?
                             .resizable()
                             .scaledToFit()
-                            .blur(radius: filterIntensity)
                     } else {
                         Text("Tap to select a picture")
                             .foregroundColor(.white)
@@ -44,8 +52,8 @@ struct ContentView: View {
                 }
                 
                 HStack {
-                    Text("Select the blur amount")
-                    Slider(value: $filterIntensity, in: 0.0 ... 1.5)
+                    Text("Intensity")
+                    Slider(value: intensity, in: 0.0 ... 1.5)
                 }
                 .padding(.vertical)
                 
@@ -53,6 +61,14 @@ struct ContentView: View {
                 HStack {
                     Button("Change Filter") {
                         // change filter
+                        self.showingFilterSheet.toggle()
+                        
+                    }
+                    .confirmationDialog(Text("Action sheet"), isPresented: $showingFilterSheet) {
+                        Button("Blur effect") {}
+                        Button("Sepia effect") {}
+                        Button("Distorsion effect") {}
+                        
                     }
                     
                     Spacer()
@@ -67,13 +83,31 @@ struct ContentView: View {
             .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
                 ImagePicker(image: self.$inputImage)
             }
-                    
+            
         }
     }
     
     func loadImage() {
         guard let inputImage = inputImage else { return }
-        image = Image(uiImage: inputImage)
+        
+        let beginImage = CIImage(image: inputImage)
+        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
+        applyProcessing()
+    }
+    
+    func applyProcessing() {
+        currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey)   
+        guard let outputImage = currentFilter.outputImage else { return }
+        
+        if let cgImg = context.createCGImage(outputImage, from: outputImage.extent) {
+            let uiImage = UIImage(cgImage: cgImg)
+            image = Image(uiImage: uiImage)
+        }
+    }
+    
+    func setFilter(_ filter: CIFilter) {
+        currentFilter = filter
+        loadImage()
     }
 }
 
