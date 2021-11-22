@@ -53,7 +53,7 @@ struct ContentView: View {
                 
                 HStack {
                     Text("Intensity")
-                    Slider(value: intensity, in: 0.0 ... 1.5)
+                    Slider(value: intensity)
                 }
                 .padding(.vertical)
                 
@@ -100,7 +100,12 @@ struct ContentView: View {
     }
     
     func applyProcessing() {
-        currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey)   
+        let inputKeys = currentFilter.inputKeys
+        if inputKeys.contains(kCIInputIntensityKey) {
+            currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) }
+            if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey) }
+            if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey)}
+                
         guard let outputImage = currentFilter.outputImage else { return }
         
         if let cgImg = context.createCGImage(outputImage, from: outputImage.extent) {
