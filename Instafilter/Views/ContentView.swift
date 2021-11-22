@@ -5,12 +5,20 @@
 //  Created by Giovanni Gaffé on 2021/11/20.
 //
 
+import CoreImage
+import CoreImage.CIFilterBuiltins
 import SwiftUI
 
 struct ContentView: View {
     @State private var image: Image?
-    @State private var selectTapped = false
     @State private var filterIntensity: CGFloat = 0.5
+
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage?
+    
+    @State private var currentFilter = CIFilter.sepiaTone()
+    let context = CIContext()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -23,6 +31,7 @@ struct ContentView: View {
                         image?
                             .resizable()
                             .scaledToFit()
+                            .blur(radius: filterIntensity)
                     } else {
                         Text("Tap to select a picture")
                             .foregroundColor(.white)
@@ -30,13 +39,13 @@ struct ContentView: View {
                     }
                 }
                 .onTapGesture {
-                    // Select an image
+                    self.showingImagePicker = true
                     
                 }
                 
                 HStack {
                     Text("Select the blur amount")
-                    Slider(value: $filterIntensity, in: 0.0 ... 1.0)
+                    Slider(value: $filterIntensity, in: 0.0 ... 1.5)
                 }
                 .padding(.vertical)
                 
@@ -55,8 +64,16 @@ struct ContentView: View {
             }
             .padding([.horizontal, .bottom])
             .navigationTitle("Instafilter")
-            
+            .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+                ImagePicker(image: self.$inputImage)
+            }
+                    
         }
+    }
+    
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        image = Image(uiImage: inputImage)
     }
 }
 
