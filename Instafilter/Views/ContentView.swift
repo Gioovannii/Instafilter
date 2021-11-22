@@ -64,11 +64,15 @@ struct ContentView: View {
                         self.showingFilterSheet.toggle()
                         
                     }
-                    .confirmationDialog(Text("Action sheet"), isPresented: $showingFilterSheet) {
-                        Button("Blur effect") {}
-                        Button("Sepia effect") {}
-                        Button("Distorsion effect") {}
-                        
+                    .confirmationDialog(Text("Select a filter"), isPresented: $showingFilterSheet) {
+                        Button("Crystallize") { self.setFilter(CIFilter.crystallize()) }
+                        Button("Edges") { self.setFilter(CIFilter.edges()) }
+                        Button("Gaussian Blur") { self.setFilter(CIFilter.gaussianBlur()) }
+                        Button("Pixellate") { self.setFilter(CIFilter.pixellate()) }
+                        Button("Sepia effect") { self.setFilter(CIFilter.sepiaTone()) }
+                        Button("Unsharp Mask") { self.setFilter(CIFilter.unsharpMask()) }
+                        Button("Vignette") { self.setFilter(CIFilter.vignette()) }
+
                     }
                     
                     Spacer()
