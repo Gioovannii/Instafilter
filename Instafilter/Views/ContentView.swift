@@ -8,9 +8,55 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var image: Image?
+    @State private var selectTapped = false
+    @State private var filterIntensity: CGFloat = 0.5
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .fill(Color.secondary)
+                        .cornerRadius(10)
+                    
+                    if image != nil {
+                        image?
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        Text("Tap to select a picture")
+                            .foregroundColor(.white)
+                            .scaledToFit()
+                    }
+                }
+                .onTapGesture {
+                    // Select an image
+                    
+                }
+                
+                HStack {
+                    Text("Select the blur amount")
+                    Slider(value: $filterIntensity, in: 0.0 ... 1.0)
+                }
+                .padding(.vertical)
+                
+                
+                HStack {
+                    Button("Change Filter") {
+                        // change filter
+                    }
+                    
+                    Spacer()
+                    
+                    Button("Save") {
+                        // Save the picture
+                    }
+                }
+            }
+            .padding([.horizontal, .bottom])
+            .navigationTitle("Instafilter")
+            
+        }
     }
 }
 
