@@ -75,43 +75,44 @@ struct ContentView: View {
                     }
                     .disabled(isImageLoaded ? false : true)
                 }
+                .navigationTitle("Instafilter")
             }
-        }
-        .padding([.horizontal, .bottom])
-        .navigationTitle("Instafilter")
-        .onChange(of: inputImage) { _ in loadImage() }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(image: $inputImage)
-        }
-        .confirmationDialog("Select a filter", isPresented: $showingFilterSheet) {
+            .padding([.horizontal, .bottom])
             
-            Button("Crystallize") {
-                self.setFilter(CIFilter.crystallize())
-                self.filterName = "Crystallize"
+            .onChange(of: inputImage) { _ in loadImage() }
+            .sheet(isPresented: $showingImagePicker) {
+                ImagePicker(image: $inputImage)
             }
-            Button("Edges") {
-                setFilter(CIFilter.edges())
-                filterName = "Edges"
-            }
-            Button("Gaussian Blur") {
-                setFilter(CIFilter.gaussianBlur())
-                filterName = "Gaussian Blur"
-            }
-            Button("Pixellate") {
-                setFilter(CIFilter.pixellate())
-                filterName = "Pixellate"
-            }
-            Button("Sepia effect") {
-                setFilter(CIFilter.sepiaTone())
-                filterName = "Sepia effect"
-            }
-            Button("Unsharp Mask") {
-                setFilter(CIFilter.unsharpMask())
-                filterName = "Unsharp Mask"
-            }
-            Button("Vignette") {
-                setFilter(CIFilter.vignette())
-                filterName = "Vignette"
+            .confirmationDialog("Select a filter", isPresented: $showingFilterSheet) {
+                
+                Button("Crystallize") {
+                    self.setFilter(CIFilter.crystallize())
+                    self.filterName = "Crystallize"
+                }
+                Button("Edges") {
+                    setFilter(CIFilter.edges())
+                    filterName = "Edges"
+                }
+                Button("Gaussian Blur") {
+                    setFilter(CIFilter.gaussianBlur())
+                    filterName = "Gaussian Blur"
+                }
+                Button("Pixellate") {
+                    setFilter(CIFilter.pixellate())
+                    filterName = "Pixellate"
+                }
+                Button("Sepia effect") {
+                    setFilter(CIFilter.sepiaTone())
+                    filterName = "Sepia effect"
+                }
+                Button("Unsharp Mask") {
+                    setFilter(CIFilter.unsharpMask())
+                    filterName = "Unsharp Mask"
+                }
+                Button("Vignette") {
+                    setFilter(CIFilter.vignette())
+                    filterName = "Vignette"
+                }
             }
         }
     }
