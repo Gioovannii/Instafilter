@@ -28,31 +28,34 @@ struct CoreImageView: View {
         // MARK: - Sepia
         
         let context = CIContext()
-                let currentFilter = CIFilter.sepiaTone() // Sepia
-                currentFilter.inputImage = beginImage
-                currentFilter.intensity = 1 // Sepia
+//        let currentFilter = CIFilter.sepiaTone()
         
         // MARK: - Pixellate
-        
-//                let currentFilter = CIFilter.pixellate()
-//                currentFilter.inputImage = beginImage
-//                currentFilter.scale = 10
+        //        let currentFilter = CIFilter.pixellate()
         
         // MARK: - Crystallize
-        
-//                let currentFilter = CIFilter.crystallize()
-//                currentFilter.inputImage = beginImage
-//                currentFilter.radius = 10
+        //        let currentFilter = CIFilter.crystallize()
         
         // MARK: - Distortion
         
-//        guard let currentFilter = CIFilter(name: "CITwirlDistortion") else { return }
-//        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
-//        currentFilter.setValue(150, forKey: kCIInputRadiusKey)
-//        currentFilter.setValue(CIVector(
-//            x: inputImage.size.width / 2, y: inputImage.size.height / 2),
-//                               forKey: kCIInputCenterKey)
+        let currentFilter = CIFilter.twirlDistortion()
+
+        currentFilter.inputImage = beginImage
+        let amount = 1.0
+        let inputKeys = currentFilter.inputKeys
         
+        if inputKeys.contains(kCIInputIntensityKey) {
+            currentFilter.setValue(amount, forKey: kCIInputIntensityKey)
+        }
+        
+        if inputKeys.contains(kCIInputRadiusKey) {
+            currentFilter.setValue(amount * 150, forKey: kCIInputRadiusKey)
+        }
+        
+        if inputKeys.contains(kCIInputScaleKey) {
+            currentFilter.setValue(amount * 10, forKey: kCIInputScaleKey)
+        }
+   
         
         guard let outputImage = currentFilter.outputImage else { return }
         
