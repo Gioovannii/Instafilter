@@ -8,26 +8,19 @@
 import SwiftUI
 
 struct WrapperStructView: View {
-    @State private var blurAmount: CGFloat = 0 {
-        didSet {
-            print("New value is \(blurAmount)")
-        }
-    }
-    
+    @State private var blurAmount = 0.0
+     
     var body: some View {
-        let blur = Binding<CGFloat> {
-                self.blurAmount
-        }
-            set: {
-            self.blurAmount = $0
-            print("New value is \(self.blurAmount)")
-        }
-
         VStack {
             Text("Hello, World!")
                 .blur(radius: blurAmount)
             
-            Slider(value: blur, in: 0...20)
+            Slider(value: $blurAmount, in: 0...20)
+               
+            
+            Button("Random Blur") {
+                blurAmount = Double.random(in: 0...20)
+            }
         }
     }
 }
