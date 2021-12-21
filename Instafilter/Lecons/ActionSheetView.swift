@@ -8,22 +8,23 @@
 import SwiftUI
 
 struct ActionSheetView: View {
-    @State private var showingActionSheet = false
+    @State private var showingConfirmation = false
     @State private var backgroundColor = Color.white
     
     var body: some View {
         Text("Hello world!")
             .frame(width: 300, height: 300)
             .background(backgroundColor)
-            .cornerRadius(20)
             .onTapGesture {
-                self.showingActionSheet = true
+                showingConfirmation = true
             }
-            .confirmationDialog(Text("Change background"), isPresented: $showingActionSheet) {
-                Button("Red") { self.backgroundColor = .red }
-                Button("Green") { self.backgroundColor = .green }
-                Button("Blue") { self.backgroundColor = .blue }
-                
+            .confirmationDialog("Change background", isPresented: $showingConfirmation) {
+                Button("Red") { backgroundColor = .red }
+                Button("Green") { backgroundColor = .green }
+                Button("Blue") { backgroundColor = .blue }
+            } message: {
+                Text("Select a new color")
+                    
             }
     }
 }
